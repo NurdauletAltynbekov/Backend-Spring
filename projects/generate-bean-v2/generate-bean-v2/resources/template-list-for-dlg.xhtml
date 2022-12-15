@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"      
+      >
+  <h:head>
+    <title>#{bundle.title_%table_name%_list}</title>
+  </h:head>
+  <h:body>
+  
+          <p:panel header="#{bundle.Filtr_i_sortirovka}" toggleable="true" closable="false" > 
+            <h:form id="id_form_filtr_%table_name%">
+        <h:panelGroup>
+
+        </h:panelGroup>
+
+              <br/>
+        <h:panelGroup>
+          <h:panelGrid columns="1" styleClass="sc_display__inline">
+            <p:outputLabel for="id_sort_field_name" value="#{bundle.Sortirovka_po_polju}" styleClass="sc_bold" /> 
+            <p:selectOneMenu value="#{%bean_name%_Filter_Bean.sort_field_name}" id="id_sort_field_name" dynamic="true">  
+              <f:selectItems value="#{%bean_name%_Filter_Bean.sort_field_name_list}" />  
+            </p:selectOneMenu>   
+          </h:panelGrid>
+          <h:panelGrid columns="1" styleClass="sc_display__inline">
+            <p:outputLabel for="id_sort_field_order" value="#{bundle.Porjadok_sortirovki}" styleClass="sc_bold" /> 
+            <p:selectOneMenu value="#{%bean_name%_Filter_Bean.sort_field_order}" id="id_sort_field_order" dynamic="true">  
+              <f:selectItems value="#{common_Filter_Bean.sort_field_order_list}" />  
+            </p:selectOneMenu>  
+          </h:panelGrid>
+          <h:panelGrid columns="1" styleClass="sc_display__inline">
+            <p:outputLabel for="id_row_cnt_per_page" value="#{bundle.Kolvo_strok_na_stranice}" styleClass="sc_bold" /> 
+            <p:selectOneMenu value="#{%bean_name%_Filter_Bean.row_cnt_per_page}" id="id_row_cnt_per_page" dynamic="true">  
+              <f:selectItems value="#{common_Filter_Bean.row_cnt_per_page_list}" />  
+            </p:selectOneMenu>   
+          </h:panelGrid>
+        </h:panelGroup>
+
+              <br/>
+              <p:commandButton id="id_cb_refresh" value="#{bundle.Obnovit}" update=":id_form_dt_%table_name%:id_dt_%table_name%" oncomplete="PF('wv_dt_%table_name%').filter();" />
+            </h:form> 
+          </p:panel>  
+
+<h:form id="id_form_dt_%table_name%">
+  <p:commandLink action="%table_name%_add.xhtml?faces-redirect=true" value="#{bundle.title_%table_name%_add_command}" />
+  <p:dataTable value="#{%bean_name%_List_Bean.converted_rec_list}" var="rec"
+    rows="#{%bean_name%_Filter_Bean.row_cnt_per_page}" paginator="true" paginatorAlwaysVisible="false"
+    lazy="true" scrollable="false" emptyMessage="#{bundle.Net_zapisei}"
+    rowIndexVar="row_num" id="id_dt_%table_name%" widgetVar="wv_dt_%table_name%"
+    selectionMode="multiple"
+    selection="#{%bean_name%_List_Bean.selected_record_list}"                         
+    rowKey="#{rec.%table_pk_field_name%}"
+    tableStyle="width: auto;"
+    reflow="true"
+    >
+<p:column>
+  <f:facet name="header">
+    <h:outputText value="#{bundle.Nomer_br_p_p}" escape="false" />
+  </f:facet>
+  <div style="text-align: right;">
+    <h:outputText value="#{row_num+1}" />                
+  </div>
+  <f:facet name="footer">  
+    <p:spacer width="10" height="10" />
+  </f:facet>
+</p:column>  
+<p:column>
+  <f:facet name="header">
+    <h:outputText value="#{bundle.Operacii}" />
+  </f:facet>
+  <div style="text-align: center;">
+    <h:link outcome="%table_name%_edit.xhtml">
+      <f:param name="%table_name%_id" value="#{rec.%table_name%}" />
+      <h:outputText value="#{bundle.Izmenit}" />
+    </h:link>
+    <p:spacer width="10" />
+    <h:link outcome="%table_name%_add.xhtml">
+      <f:param name="copy_entity_id" value="#{rec.%table_name%}" />
+      <h:outputText value="#{bundle.Dobavit_kopiju}" />
+    </h:link>
+  </div>
+  <f:facet name="footer">  
+    <p:spacer width="10" height="10" />
+  </f:facet>
+</p:column>
+%data_table_columns%
+  <f:facet name="footer">
+     <h:outputText value="${bundle.Obwee_kolichestvo_zapisej}" />:
+     #{%bean_name%_List_Bean.rec_list.rowCount} 
+  </f:facet> 
+</p:dataTable>
+  <p:messages escape="false" >
+    <p:autoUpdate />  
+  </p:messages>
+</h:form>
+
+  </h:body>  
+</html>

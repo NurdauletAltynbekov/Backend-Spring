@@ -1,0 +1,46 @@
+  <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" >
+<p:dialog id="id_%table_name%_add_edit_dlg" widgetVar="wv_%table_name%_add_edit_dlg" modal="true" position="top" style="max-height: 100%; max-width: 100%; overflow: scroll;" 
+              closable="true" dynamic="true" resizable="true" appendTo="@(body)" closeOnEscape="true"> 
+  <p:ajax event="open" update="id_form_%table_name%_add_edit_header id_form_%table_name%_add_edit" />
+  <f:facet name="header"> 
+    <h:form id="id_form_%table_name%_add_edit_header">
+      <p:outputPanel id="id_op_header"> 
+        <h:outputFormat value="#{%bean_name%_Controller.isAddMode?bundle.title_%table_name%_add_command:bundle.title_%table_name%_edit_command}" escape="false" >
+        </h:outputFormat>
+      </p:outputPanel> 
+    </h:form>
+  </f:facet>
+  <h:form id="id_form_%table_name%_add_edit" >
+    <p:focus for="@next" />
+	
+%panelgrid_body%
+
+	<p:messages escape="false" >
+      <p:autoUpdate />  
+    </p:messages>
+	
+<p:toolbar>
+<f:facet name="left">		
+    <p:commandButton icon="ui-icon-disk" actionListener="#{%bean_name%_Controller.insertRecActionForDlg()}" 
+                         value="#{bundle.Sohranit}" rendered="#{!%bean_name%_Controller.isEditMode}" />
+    <p:commandButton icon="ui-icon-disk" actionListener="#{%bean_name%_Controller.updateRecActionForDlg()}" 
+                         value="#{bundle.Sohranit}" rendered="#{%bean_name%_Controller.isEditMode}" />
+    <p:commandButton icon="ui-icon-cancel" value="#{bundle.Otmenit}" onclick="PF('wv_%table_name%_add_edit_dlg').hide()" immediate="true" />      
+    <span class="ui-separator">                  
+      <span class="ui-icon ui-icon-grip-dotted-vertical" />                
+    </span>
+    <p:commandButton icon="fa fa-remove" actionListener="#{%bean_name%_Controller.deleteRecActionForDlg}" 
+                     value="#{bundle.Udalit}" rendered="#{%bean_name%_Controller.isEditMode}" >
+      <p:confirm header="#{bundle.Podtverzhdenie}" message="#{bundle.Vy_uvereny}" icon="ui-icon-alert" />
+    </p:commandButton>       
+</f:facet>
+</p:toolbar>
+	
+  </h:form> 
+</p:dialog>
+  </ui:composition>

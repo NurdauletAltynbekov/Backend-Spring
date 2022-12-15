@@ -1,0 +1,10 @@
+ <managed-bean>
+  <managed-bean-name>%bean_name%</managed-bean-name>
+  <managed-bean-class>dbtables.%class_name%</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>%bean_name%_Manager</managed-bean-name>
+  <managed-bean-class>dbtables.%class_name%_Manager</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>

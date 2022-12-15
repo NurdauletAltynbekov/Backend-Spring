@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="template_2.xhtml"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:vt="http://java.sun.com/jsf/composite/components"
+  xmlns:p="http://primefaces.org/ui"
+  >
+
+<ui:define name="title">
+  #{bundle.title_%table_name%_list} | #{variablesBean.site_title}
+</ui:define>
+
+<ui:define name="container_content">
+<h:form>
+  <p:breadCrumb lastItemDisabled="true">
+    <p:menuitem value="#{bundle.Osnovnoe_menju}" url="main_menu.xhtml?faces-redirect=true" />
+    <p:menuitem value="#{bundle.title_%table_name%_list}" />
+  </p:breadCrumb>
+</h:form>
+
+    <h1>#{bundle.title_%table_name%_list}</h1>
+    <h:form>
+      <p:commandButton action="%table_name%_add.xhtml?faces-redirect=true" value="#{bundle.title_%table_name%_add_command}" />
+    </h:form>
+
+          <p:panel header="#{bundle.Filtr_i_sortirovka}" toggleable="true" closable="false" > 
+            <h:form id="id_form_filtr_%table_name%">
+			  <p:defaultCommand target="id_cb_refresh" />
+              <h:panelGroup> 
+
+              </h:panelGroup>
+
+              <br/>
+        <h:panelGroup>
+          <h:panelGrid columns="1" styleClass="sc_display__inline">
+            <p:outputLabel for="id_sort_field_name" value="#{bundle.Sortirovka_po_polju}" styleClass="sc_bold" /> 
+            <p:selectOneMenu value="#{%bean_name%_Filter_Bean.sort_field_name}" id="id_sort_field_name" dynamic="true">  
+              <f:selectItems value="#{%bean_name%_Filter_Bean.sort_field_name_list}" />  
+            </p:selectOneMenu>   
+          </h:panelGrid>
+          <h:panelGrid columns="1" styleClass="sc_display__inline">
+            <p:outputLabel for="id_sort_field_order" value="#{bundle.Porjadok_sortirovki}" styleClass="sc_bold" /> 
+            <p:selectOneMenu value="#{%bean_name%_Filter_Bean.sort_field_order}" id="id_sort_field_order" dynamic="true">  
+              <f:selectItems value="#{common_Filter_Bean.sort_field_order_list}" />  
+            </p:selectOneMenu>  
+          </h:panelGrid>
+          <h:panelGrid columns="1" styleClass="sc_display__inline">
+            <p:outputLabel for="id_row_cnt_per_page" value="#{bundle.Kolvo_strok_na_stranice}" styleClass="sc_bold" /> 
+            <p:selectOneMenu value="#{%bean_name%_Filter_Bean.row_cnt_per_page}" id="id_row_cnt_per_page" dynamic="true">  
+              <f:selectItems value="#{common_Filter_Bean.row_cnt_per_page_list}" />  
+            </p:selectOneMenu>   
+          </h:panelGrid>
+        </h:panelGroup>
+
+              <br/>
+              <p:commandButton id="id_cb_refresh" value="#{bundle.Obnovit}" update=":id_form_dt_%table_name%:id_dt_%table_name% :id_form_dt_%table_name%:id_ol_sel_cnt" oncomplete="PF('wv_dt_%table_name%').filter();" />
+            </h:form> 
+          </p:panel>  
+
+<h:form id="id_form_dt_%table_name%">
+      <p:toolbar id="id_tb_mass_op">
+        <f:facet name="left">
+          &nbsp;
+          <p:outputLabel value="#{bundle.Vybrano}: " />
+          <p:outputLabel id="id_ol_sel_cnt" value="#{%bean_name%_List_Bean.selected_record_list==null?0:%bean_name%_List_Bean.selected_record_list.size()}" />          
+          <span class="ui-separator">
+            <span class="ui-icon pi pi-ellipsis-v" />
+          </span>
+          <p:commandButton icon="fa fa-remove" value="#{bundle.Udalit}" actionListener="#{%bean_name%_List_Bean.del_selected_records()}" 
+                            oncomplete="getById('id_form_filtr_%table_name%:id_cb_refresh').click();" >                      
+            <p:confirm header="#{bundle.Podtverzhdenie}" message="#{bundle.Vy_uvereny}" icon="ui-icon-alert" />
+          </p:commandButton>
+        </f:facet>
+      </p:toolbar>
+
+  <p:dataTable value="#{%bean_name%_List_Bean.converted_rec_list}" var="rec"
+    rows="#{%bean_name%_Filter_Bean.row_cnt_per_page}" paginator="true" paginatorAlwaysVisible="false"
+    lazy="true" scrollable="false" emptyMessage="#{bundle.Net_zapisei}"
+    rowIndexVar="row_num" id="id_dt_%table_name%" widgetVar="wv_dt_%table_name%"
+    selection="#{%bean_name%_List_Bean.selected_record_list}"                         
+    rowKey="#{rec.%table_pk_field_name%}"
+    tableStyle="width: auto;"
+    reflow="true"
+    >
+        <p:ajax event="rowSelectCheckbox" update=":id_form_dt_%table_name%:id_ol_sel_cnt" />
+        <p:ajax event="rowUnselectCheckbox" update=":id_form_dt_%table_name%:id_ol_sel_cnt" />
+        <p:ajax event="toggleSelect" update=":id_form_dt_%table_name%:id_ol_sel_cnt" />
+        <p:ajax event="rowSelect" update=":id_form_dt_%table_name%:id_ol_sel_cnt" />
+        <p:column selectionMode="multiple" style="width: 16px; text-align: center;"/>
+<p:column>
+  <f:facet name="header">
+    <h:outputText value="#{bundle.Знак_номера}" escape="false" />
+  </f:facet>
+  <div style="text-align: right;">
+    <h:outputText value="#{row_num+1}" />                
+  </div>
+  <f:facet name="footer">  
+    <p:spacer width="10" height="10" />
+  </f:facet>
+</p:column>  
+
+        <p:column>
+          <f:facet name="header">
+            <h:outputText value="#{bundle.Operacii}" />
+          </f:facet>
+          <div style="text-align: center;">
+           <p:menuButton styleClass="sc_width__auto">
+            <p:menuitem icon="fa fa-edit fa-fw" value="&#160;#{bundle.Izmenit}" onclick="window.location.href = '%table_name%_edit.xhtml?%table_name%_id=#{rec.%table_name%}'" />
+            <p:menuitem icon="fa fa-copy fa-fw" value="&#160;#{bundle.Dobavit_kopiju}" onclick="window.location.href = '%table_name%_add.xhtml?copy_entity_id=#{rec.%table_name%}'" />
+            <p:menuitem icon="fa fa-remove fa-fw" value="&#160;#{bundle.Udalit}" actionListener="#{%bean_name%_List_Bean.del_record(rec)}" 
+                             oncomplete="getById('id_form_filtr_%table_name%:id_cb_refresh').click();" >                      
+              <p:confirm header="#{bundle.Podtverzhdenie}" message="#{bundle.Vy_uvereny}" icon="ui-icon-alert" />
+            </p:menuitem>
+           </p:menuButton>
+          </div>
+          <f:facet name="footer">  
+            <p:spacer width="10" height="10" />
+          </f:facet>
+        </p:column>
+
+%data_table_columns%
+  <f:facet name="footer">
+     <h:outputText value="#{bundle.Obwee_kolichestvo_zapisej}" />:
+     #{%bean_name%_List_Bean.rec_list.rowCount} 
+  </f:facet> 
+</p:dataTable>
+  <p:messages escape="false" >
+    <p:autoUpdate />  
+  </p:messages>
+</h:form>
+
+</ui:define>
+
+</ui:composition>

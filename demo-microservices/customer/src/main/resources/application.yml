@@ -1,0 +1,27 @@
+server:
+  port: 8040
+
+spring:
+  application:
+    name: customer
+
+  datasource:
+    username: 'demo-microservices'
+    password: 'password'
+    url: jdbc:postgresql://127.18.0.3:5432/customer
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQL82Dialect
+#        ddl-auto: none
+#        naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+#    show-sql: true
+#    database: postgresql
+    jpa:
+      hibernate:
+        ddl-auto: update
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: 'true'
+      show-sql: 'true'

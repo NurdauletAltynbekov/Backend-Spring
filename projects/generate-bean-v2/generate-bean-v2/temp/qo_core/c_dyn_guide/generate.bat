@@ -1,0 +1,1 @@
+java -jar ../../../dist/generate-bean-v2.jar generate.prop ../../../resources > out.txt

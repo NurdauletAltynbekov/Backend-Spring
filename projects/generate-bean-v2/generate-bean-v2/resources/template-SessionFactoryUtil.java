@@ -1,0 +1,1 @@
+    ac.addAnnotatedClass(model.%db_prefix%.dbtables.%class_name%.class);

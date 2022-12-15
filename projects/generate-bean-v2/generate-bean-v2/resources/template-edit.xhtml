@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="template_2.xhtml"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:vt="http://java.sun.com/jsf/composite/components"
+  xmlns:p="http://primefaces.org/ui"
+  >
+
+<ui:define name="metadata">
+  <f:metadata>
+    <f:viewParam name="%table_name%_id" value="#{%bean_name%_Controller.%table_name%.%table_pk_field_name%}" required="#{not facesContext.postback}"
+                 requiredMessage="No id selected"
+                 validatorMessage="Invalid id selected" />
+  </f:metadata>
+  <f:event type="preRenderView"
+           listener="#{%bean_name%_Controller.loadRecListener}" />
+</ui:define>
+
+<ui:define name="title">
+  #{bundle.title_%table_name%_edit_command} | #{variablesBean.site_title}
+</ui:define>
+
+<ui:define name="container_content">
+<h:form>
+  <p:breadCrumb lastItemDisabled="true">
+    <p:menuitem value="#{bundle.Osnovnoe_menju}" url="main_menu.xhtml?faces-redirect=true" />
+    <p:menuitem value="#{bundle.title_%table_name%_list}" url="%table_name%_list.xhtml?faces-redirect=true" />
+    <p:menuitem value="#{bundle.title_%table_name%_edit_command}" />
+  </p:breadCrumb>
+</h:form>
+    <!-- Content -->
+    <div id="content" class="colM">
+      <h1>#{bundle.title_%table_name%_edit_command}</h1>
+        <div id="content-main">
+<h:form id="id_form">
+<div>
+  <ui:include src="%table_name%_add_edit.xhtml" />
+
+<br/>
+
+<p:toolbar>
+<f:facet name="left">
+%additional_buttons_block%
+  <p:commandButton id="id_cb_do_nothing" onclick="return false;" style="display: none;" />
+  <p:commandButton id="id_cb_save" value="#{bundle.Sohranit}"
+                   action="#{%bean_name%_Controller.updateRecAction}" styleClass="default" >
+    <f:param name="%table_name%_id" value="#{%bean_name%_Controller.%table_name%.%table_pk_field_name%}" />     
+  </p:commandButton>
+  <p:commandButton id="id_cb_cancel" value="#{bundle.Otmenit}"
+                   action="%table_name%_list.xhtml?faces-redirect=true" styleClass="default" immediate="true" >
+    <f:param name="%table_name%_id" value="#{%bean_name%_Controller.%table_name%.%table_pk_field_name%}" />     
+  </p:commandButton>
+  <span class="ui-separator">                  
+    <span class="ui-icon ui-icon-grip-dotted-vertical" />                
+  </span>  
+  <p:commandButton id="id_cb_delete" value="#{bundle.Udalit}" action="#{%bean_name%_Controller.deleteRecAction}" styleClass="deletelink" >
+    <f:param name="%table_name%_id" value="#{%bean_name%_Controller.%table_name%.%table_pk_field_name%}" />     
+    <p:confirm header="#{bundle.Podtverzhdenie}" message="#{bundle.Vy_uvereny}" icon="ui-icon-alert" />
+  </p:commandButton>
+</f:facet>
+</p:toolbar>
+
+  <p:messages escape="false" >
+    <p:autoUpdate />  
+  </p:messages>
+<script type="text/javascript">
+</script>
+</div>
+</h:form>
+    </div>
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+%include_pages_block%
+</ui:define>
+
+</ui:composition>
